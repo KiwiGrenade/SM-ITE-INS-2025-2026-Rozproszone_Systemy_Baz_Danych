@@ -1,0 +1,53 @@
+\documentclass[11pt]{article}
+\usepackage{graphicx}
+\usepackage[a4paper,top=2.7cm,bottom=2.7cm,left=3.5cm,right=3.5cm,marginparwidth=1.75cm]{geometry}
+\usepackage[polish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{polski}
+\usepackage{graphicx}
+\usepackage{algorithmic}
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+
+\title{Rozproszone Systemy Baz Danych - Opis zadania projektowego}
+\author{Jakub Jaśków, Justyna Ziemichód (G2)}
+
+\begin{document}
+\maketitle
+
+\section{Temat i cel projektu}
+\textbf{Temat}: „Rozproszony system bazodanowy przeznaczony do obsługi liczników wody.”\\
+\textbf{Cel projektu}: \xspace Zaprojektowanie oraz implementacja aplikacji umożliwiającej dostęp do rozproszonej bazy spisów liczników wody.
+
+\section{Opis działania i funkcje systemu}
+
+System opiera się na dwóch lub trzech serwerach, na których funkcjonują bazy danych przechowujące informacje dotyczące odczytów liczników wody, takie jak numer urządzenia pomiarowego, lokalizacja, data pomiaru czy ilość zużytej wody. Struktura tych baz jest z góry określona, co umożliwia udostępnianie danych użytkownikom poprzez aplikację działającą na serwerze WWW, dostępną z poziomu przeglądarki internetowej.
+
+Rozwiązanie pozwala na zdalny dostęp do dowolnego serwera bazodanowego obsługującego dany obszar działania przedsiębiorstwa wodociągowego. Użytkownicy mogą przeglądać dane, dodawać nowe odczyty lub aktualizować istniejące wpisy w bazie.
+
+Aby zapewnić spójność informacji w całym systemie, wprowadzono mechanizm replikacji danych pomiędzy serwerami.
+
+\section{Założenia architektoniczne przyjęte podczas realizacji systemu}
+
+W ramach projektu zostanie zastosowany trójwarstwowy model architektury \break
+klient/serwer, oparty na koncepcji tzw. „cienkiego klienta”.
+W takim rozwiązaniu przetwarzanie logiki biznesowej odbywa się po stronie serwera aplikacyjnego, zarządzanie i przechowywanie danych realizowane jest przez serwery baz danych, natomiast po stronie klienta ogranicza się ono do warstwy prezentacji, obsługiwanej za pomocą przeglądarki internetowej.
+
+Aplikacja udostępniająca funkcje biznesowe będzie dostępna poprzez serwer WWW. W projekcie zostaną wykorzystane bazy danych jednego typu, co zapewni ich jednorodność i spójność. Komunikacja z rozproszonym systemem bazodanowym będzie odbywać się poprzez mechanizmy aplikacyjne, które umożliwią kierowanie zapytań do odpowiedniego serwera baz danych.
+
+W warstwie bazodanowej zostanie zastosowany model replikacji, umożliwiający dystrybucję danych pomiędzy wieloma węzłami systemu. W szczególności wykorzystana zostanie replikacja strumieniowa (streaming replication) PostgreSQL, w której główny serwer (master) obsługuje wszystkie operacje zapisu, natomiast serwery podrzędne (replica) utrzymują swoje kopie danych na podstawie bieżącego strumienia dziennika transakcyjnego (WAL). Rozwiązanie to zapewni możliwość równoważenia obciążenia przy operacjach odczytu oraz zwiększy dostępność systemu poprzez możliwość przeprowadzenia awaryjnego przełączenia (failover) w przypadku niedostępności serwera głównego.
+
+\section{Wykorzystywane narzędzia, technologie projektowania oraz implementacji systemu}
+
+Dostęp do baz danych pomiarów wodociągów będzie realizowany za pośrednictwem serwerów zarządzających systemem \textbf{PostgreSQL}. Logika aplikacji zostanie zaimplementowana po stronie serwera z wykorzystaniem frameworka \textbf{Flask} w języku \textbf{Python}, który obsłuży komunikację z bazą danych oraz przetwarzanie żądań użytkowników.
+
+Dane pomiarowe, takie jak odczyty liczników, lokalizacje punktów czy daty odczytów, będą przechowywane w bazie \textbf{PostgreSQL}. W celu zapewnienia spójności i wysokiej dostępności danych zastosowana zostanie replikacja strumieniowa (\textbf{streaming replication}), umożliwiająca bieżące synchronizowanie danych między serwerami.
+
+Warstwa prezentacji zostanie zrealizowana w formie aplikacji webowej dostępnej z poziomu przeglądarki internetowej, umożliwiającej przeglądanie i aktualizację informacji o pomiarach.
+
+Do opisu i projektowania funkcjonalności systemu wykorzystany zostanie zunifikowany język modelowania \textbf{UML}, służący do tworzenia diagramów przedstawiających strukturę i sposób działania aplikacji.
+
+\section{Struktura systemu i schemat komunikacji}
+
+\end{document}
